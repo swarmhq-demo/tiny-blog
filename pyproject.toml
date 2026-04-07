@@ -1,0 +1,11 @@
+[project]
+name = "tiny-blog"
+version = "0.1.0"
+description = "A tiny blog demo repo intended for issue/feature tracking and agent evaluation."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.110.0",
+  "uvicorn[standard]>=0.30.0",
+]
+

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post</title>
+  </head>
+  <body>
+    <a href="/web/index.html">← Back</a>
+    <h1 id="title"></h1>
+    <div id="meta"></div>
+    <hr />
+    <div id="content"></div>
+
+    <h2>Comment</h2>
+    <textarea id="comment" rows="4" cols="60"></textarea>
+    <br />
+    <button id="submit">Submit</button>
+    <div id="commentStatus"></div>
+
+    <script type="module">
+      import { formatPublishedDate } from "./js/date_format.js";
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      const res = await fetch(`/posts/${encodeURIComponent(id)}`);
+      const post = await res.json();
+
+      document.getElementById("title").textContent = post.title;
+      document.getElementById("meta").textContent = formatPublishedDate(post.published_at);
+      document.getElementById("content").textContent = post.content;
+
+      document.getElementById("submit").addEventListener("click", async () => {
+        const body = document.getElementById("comment").value;
+        const r = await fetch(`/posts/${encodeURIComponent(id)}/comments`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ body }),
+        });
+        const out = await r.json();
+        document.getElementById("commentStatus").textContent = JSON.stringify(out);
+      });
+    </script>
+  </body>
+</html>
